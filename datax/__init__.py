@@ -2,14 +2,15 @@ import grpc
 import json
 import os
 import msgpack
-import datax_sdk_protocol_pb2, datax_sdk_protocol_pb2_grpc
+from .datax_sdk_protocol_pb2 import NextOptions, EmitRequest
+from .datax_sdk_protocol_pb2_grpc import DataXStub
 
 
 class DataX:
     def __init__(self,):
         sidecar_address = os.getenv("DATAX_SIDECAR_ADDRESS", "127.0.0.1:20001")
         self.channel = grpc.insecure_channel(sidecar_address)
-        self.stub = datax_sdk_protocol_pb2_grpc.DataXStub(self.channel)
+        self.stub = DataXStub(self.channel)
 
     @staticmethod
     def get_configuration():
@@ -20,12 +21,12 @@ class DataX:
             return json.load(f)
 
     def next(self):
-        response = self.stub.Next(datax_sdk_protocol_pb2.NextOptions())
+        response = self.stub.Next(NextOptions())
         msg = response.message
         return msg.stream, msg.reference, msgpack.unpackb(msg.data)
 
     def emit(self, message, reference=None):
-        request = datax_sdk_protocol_pb2.EmitRequest(data=msgpack.packb(message))
+        request = EmitRequest(data=msgpack.packb(message))
         if reference is None:
             request.reference = reference
         self.stub.Emit(request)
