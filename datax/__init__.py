@@ -2,7 +2,7 @@ import grpc
 import json
 import os
 import msgpack
-from .datax_sdk_protocol_pb2 import NextOptions, EmitRequest
+from .datax_sdk_protocol_pb2 import NextOptions, EmitMessage
 from .datax_sdk_protocol_pb2_grpc import DataXStub
 
 
@@ -26,7 +26,7 @@ class DataX:
         return msg.stream, msg.reference, msgpack.unpackb(msg.data)
 
     def emit(self, message, reference=None):
-        request = EmitRequest(data=msgpack.packb(message))
+        request = EmitMessage(data=msgpack.packb(message))
         if reference is None:
             request.reference = reference
         self.stub.Emit(request)
