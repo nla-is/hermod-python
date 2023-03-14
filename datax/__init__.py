@@ -22,8 +22,7 @@ class DataX:
 
     def next(self):
         response = self.stub.Next(NextOptions())
-        msg = response.message
-        return msg.stream, msg.reference, msgpack.unpackb(msg.data)
+        return response.stream, response.reference, msgpack.unpackb(response.data)
 
     def emit(self, message, reference=None):
         request = EmitMessage(data=msgpack.packb(message))
