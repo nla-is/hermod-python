@@ -2,8 +2,8 @@ import grpc
 import json
 import os
 import msgpack
-from .datax_sdk_protocol_pb2 import NextOptions, EmitMessage
-from .datax_sdk_protocol_pb2_grpc import DataXStub
+from .protocol.datax_sdk_protocol_pb2 import NextOptions, EmitMessage
+from .protocol.datax_sdk_protocol_pb2_grpc import DataXStub
 
 
 class DataX:
