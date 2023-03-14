@@ -8,5 +8,6 @@ RUN apk add --no-cache py3-pip git && \
 
 COPY repeater.py /
 
-ENTRYPOINT ["python3", "/repeater.py"]
+#ENTRYPOINT ["python3", "/repeater.py"]
 
+ENTRYPOINT ["sleep", "36666"]
