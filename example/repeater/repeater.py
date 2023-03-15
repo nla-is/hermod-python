@@ -6,4 +6,4 @@ if __name__ == '__main__':
         stream, reference, message = dx.next()
         message['repeated'] = True
         message['repeatedFrom'] = stream
-        dx.emit({'test': True}, reference)
+        dx.emit(message, reference)
