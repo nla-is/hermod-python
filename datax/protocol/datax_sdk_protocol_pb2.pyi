@@ -1,7 +1,6 @@
-from google.protobuf import struct_pb2 as _struct_pb2
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Optional, Union as _Union
+from typing import ClassVar as _ClassVar, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -17,11 +16,13 @@ class EmitResult(_message.Message):
     __slots__ = []
     def __init__(self) -> None: ...
 
+class GetRequestOptions(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
 class Initialization(_message.Message):
-    __slots__ = ["configuration"]
-    CONFIGURATION_FIELD_NUMBER: _ClassVar[int]
-    configuration: _struct_pb2.Struct
-    def __init__(self, configuration: _Optional[_Union[_struct_pb2.Struct, _Mapping]] = ...) -> None: ...
+    __slots__ = []
+    def __init__(self) -> None: ...
 
 class NextMessage(_message.Message):
     __slots__ = ["data", "reference", "stream"]
@@ -36,6 +37,24 @@ class NextMessage(_message.Message):
 class NextOptions(_message.Message):
     __slots__ = []
     def __init__(self) -> None: ...
+
+class Reply(_message.Message):
+    __slots__ = ["data"]
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    data: bytes
+    def __init__(self, data: _Optional[bytes] = ...) -> None: ...
+
+class ReplyResult(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
+class Request(_message.Message):
+    __slots__ = ["data", "sender"]
+    DATA_FIELD_NUMBER: _ClassVar[int]
+    SENDER_FIELD_NUMBER: _ClassVar[int]
+    data: bytes
+    sender: str
+    def __init__(self, sender: _Optional[str] = ..., data: _Optional[bytes] = ...) -> None: ...
 
 class Settings(_message.Message):
     __slots__ = []

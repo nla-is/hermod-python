@@ -11,29 +11,36 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from google.protobuf import struct_pb2 as google_dot_protobuf_dot_struct__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18\x64\x61tax-sdk-protocol.proto\x12\x15\x64\x61tax.sdk.protocol.v1\x1a\x1cgoogle/protobuf/struct.proto\"\n\n\x08Settings\"@\n\x0eInitialization\x12.\n\rconfiguration\x18\x01 \x01(\x0b\x32\x17.google.protobuf.Struct\"\r\n\x0bNextOptions\">\n\x0bNextMessage\x12\x11\n\treference\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\".\n\x0b\x45mitMessage\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x11\n\treference\x18\x02 \x01(\t\"\x0c\n\nEmitResult2\x82\x02\n\x05\x44\x61taX\x12V\n\nInitialize\x12\x1f.datax.sdk.protocol.v1.Settings\x1a%.datax.sdk.protocol.v1.Initialization\"\x00\x12P\n\x04Next\x12\".datax.sdk.protocol.v1.NextOptions\x1a\".datax.sdk.protocol.v1.NextMessage\"\x00\x12O\n\x04\x45mit\x12\".datax.sdk.protocol.v1.EmitMessage\x1a!.datax.sdk.protocol.v1.EmitResult\"\x00\x42,Z*github.com/nla-is/datax-sdk-protocol/v1;v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18\x64\x61tax-sdk-protocol.proto\x12\x15\x64\x61tax.sdk.protocol.v2\"\n\n\x08Settings\"\x10\n\x0eInitialization\"\r\n\x0bNextOptions\">\n\x0bNextMessage\x12\x11\n\treference\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\".\n\x0b\x45mitMessage\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x11\n\treference\x18\x02 \x01(\t\"\x0c\n\nEmitResult\"\x13\n\x11GetRequestOptions\"\'\n\x07Request\x12\x0e\n\x06sender\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"\x15\n\x05Reply\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\"\r\n\x0bReplyResult2\xfb\x03\n\x05\x44\x61taX\x12V\n\nInitialize\x12\x1f.datax.sdk.protocol.v2.Settings\x1a%.datax.sdk.protocol.v2.Initialization\"\x00\x12P\n\x04Next\x12\".datax.sdk.protocol.v2.NextOptions\x1a\".datax.sdk.protocol.v2.NextMessage\"\x00\x12O\n\x04\x45mit\x12\".datax.sdk.protocol.v2.EmitMessage\x1a!.datax.sdk.protocol.v2.EmitResult\"\x00\x12V\n\nGetRequest\x12(.datax.sdk.protocol.v2.GetRequestOptions\x1a\x1e.datax.sdk.protocol.v2.Request\x12P\n\x0cReplyRequest\x12\x1c.datax.sdk.protocol.v2.Reply\x1a\".datax.sdk.protocol.v2.ReplyResult\x12M\n\rSubmitRequest\x12\x1e.datax.sdk.protocol.v2.Request\x1a\x1c.datax.sdk.protocol.v2.ReplyB,Z*github.com/nla-is/datax-sdk-protocol/v2;v2b\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'datax_sdk_protocol_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z*github.com/nla-is/datax-sdk-protocol/v1;v1'
-  _SETTINGS._serialized_start=81
-  _SETTINGS._serialized_end=91
-  _INITIALIZATION._serialized_start=93
-  _INITIALIZATION._serialized_end=157
-  _NEXTOPTIONS._serialized_start=159
-  _NEXTOPTIONS._serialized_end=172
-  _NEXTMESSAGE._serialized_start=174
-  _NEXTMESSAGE._serialized_end=236
-  _EMITMESSAGE._serialized_start=238
-  _EMITMESSAGE._serialized_end=284
-  _EMITRESULT._serialized_start=286
-  _EMITRESULT._serialized_end=298
-  _DATAX._serialized_start=301
-  _DATAX._serialized_end=559
+  DESCRIPTOR._serialized_options = b'Z*github.com/nla-is/datax-sdk-protocol/v2;v2'
+  _SETTINGS._serialized_start=51
+  _SETTINGS._serialized_end=61
+  _INITIALIZATION._serialized_start=63
+  _INITIALIZATION._serialized_end=79
+  _NEXTOPTIONS._serialized_start=81
+  _NEXTOPTIONS._serialized_end=94
+  _NEXTMESSAGE._serialized_start=96
+  _NEXTMESSAGE._serialized_end=158
+  _EMITMESSAGE._serialized_start=160
+  _EMITMESSAGE._serialized_end=206
+  _EMITRESULT._serialized_start=208
+  _EMITRESULT._serialized_end=220
+  _GETREQUESTOPTIONS._serialized_start=222
+  _GETREQUESTOPTIONS._serialized_end=241
+  _REQUEST._serialized_start=243
+  _REQUEST._serialized_end=282
+  _REPLY._serialized_start=284
+  _REPLY._serialized_end=305
+  _REPLYRESULT._serialized_start=307
+  _REPLYRESULT._serialized_end=320
+  _DATAX._serialized_start=323
+  _DATAX._serialized_end=830
 # @@protoc_insertion_point(module_scope)
