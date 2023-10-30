@@ -1,16 +1,19 @@
-import grpc
+from ctypes import *
+import cbor2
 import json
 import os
-import msgpack
-from .protocol.datax_sdk_protocol_pb2 import NextOptions, EmitMessage
-from .protocol.datax_sdk_protocol_pb2_grpc import DataXStub
 
 
 class DataX:
     def __init__(self, ):
-        sidecar_address = os.getenv("DATAX_SIDECAR_ADDRESS", "127.0.0.1:20001")
-        self.channel = grpc.insecure_channel(sidecar_address)
-        self.stub = DataXStub(self.channel)
+        self._handle = cdll.LoadLibrary("libdatax-sdk.so")
+        self._handle.datax_sdk_v2_initialize()
+        self._handle.datax_sdk_v2_next.restype = c_size_t
+        self._handle.datax_sdk_v2_emit.argtypes = [c_void_p, c_int32, c_char_p]
+        self._handle.datax_sdk_v2_message_stream.restype = c_char_p
+        self._handle.datax_sdk_v2_message_reference.restype = c_char_p
+        self._handle.datax_sdk_v2_message_data.restype = c_void_p
+        self._handle.datax_sdk_v2_message_data_size.restype = c_int32
 
     @staticmethod
     def get_configuration() -> dict:
@@ -20,14 +23,21 @@ class DataX:
         with open(configuration_path, 'r') as f:
             return json.load(f)
 
+    # stream, reference, data
     def next(self) -> (str, str, dict):
-        response = self.stub.Next(NextOptions())
-        return response.stream, response.reference, msgpack.unpackb(response.data)
+        msg = self._handle.datax_sdk_v2_next()
+        stream = self._handle.datax_sdk_v2_message_stream(msg)
+        reference = self._handle.datax_sdk_v2_message_reference(msg)
+        data = self._handle.datax_sdk_v2_message_data(msg)
+        data_size = self._handle.datax_sdk_v2_message_data_size(msg)
+        data = bytearray(string_at(data, data_size))
+        data = cbor2.loads(data)
+        self._handle.datax_sdk_v2_message_close(msg)
+        return stream, reference, data
 
     def emit(self, message: dict, reference: str = None):
-        data = msgpack.packb(message)
-        if reference is not None:
-            request = EmitMessage(data=data, reference=reference)
-        else:
-            request = EmitMessage(data=msgpack.packb(message))
-        self.stub.Emit(request)
+        if reference is None:
+            reference = ""
+        data = cbor2.dumps(message)
+        self._handle.datax_sdk_v2_emit(data, len(data), reference)
+
