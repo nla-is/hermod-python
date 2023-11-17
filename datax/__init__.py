@@ -33,7 +33,7 @@ class DataX:
         data = bytearray(string_at(data, data_size))
         data = cbor2.loads(data)
         self._handle.datax_sdk_v2_message_close(msg)
-        return stream, reference, data
+        return stream.decode("ascii"), reference.decode("ascii"), data
 
     def emit(self, message: dict, reference: str = None):
         if reference is None:
