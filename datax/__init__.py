@@ -39,5 +39,5 @@ class DataX:
         if reference is None:
             reference = ""
         data = cbor2.dumps(message)
-        self._handle.datax_sdk_v2_emit(data, len(data), reference)
+        self._handle.datax_sdk_v2_emit(data, len(data), bytes(reference, encoding='ascii'))
 
