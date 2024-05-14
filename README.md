@@ -1,25 +1,18 @@
-# DataX SDK for Python
+# Hermod SDK for Python
 
 ## Install
 Install the SDK using `pip` from `git`:
 
 ```shell
-pip install git+https://github.com/nla-is/datax-python.git@v2.0.0-alpha.12
+pip install git+https://github.com/nla-is/hermod-python.git
 ```
 
 ## Usage
 ```python
-import datax
+import hermod
 
-# initialize
-dx = datax.DataX()
+def handler(input_parameters):
+    return input_parameters
 
-while True:
-    # receive message
-    stream, reference, message = dx.next()
-    
-    output = process(message)
-
-    # publish message
-    dx.emit(output, reference)
+hermod.run(handler)
 ```
