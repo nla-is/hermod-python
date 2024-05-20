@@ -4,7 +4,6 @@ import re
 from typing import Callable
 import inspect
 
-
 _SLEIPNIR_PATH = os.path.join('__sleipnir__', 'sleipnir.so')
 
 
@@ -26,14 +25,14 @@ def _run_production(hr: 'HandlerRunner'):
 
     hermod_v1_handler = CFUNCTYPE(c_void_p, c_void_p, c_void_p, c_int32)
 
-    def callback(result, payload, payload_size):
+    def callback(result_ptr, payload, payload_size):
         try:
             params = cbor2.loads(bytearray(string_at(payload, payload_size)))
             result = hr.call_handler(params)
             data = cbor2.dumps(result)
-            sleipnir.HermodV1ResultSetOutput(result, data, len(data))
+            sleipnir.HermodV1ResultSetOutput(result_ptr, data, len(data))
         except Exception as e:
-            sleipnir.HermodV1ResultSetError(result, bytes(f"exception {e}", encoding='ascii'))
+            sleipnir.HermodV1ResultSetError(result_ptr, bytes(f"exception {e}", encoding='ascii'))
 
     sleipnir.HermodV1Run(hermod_v1_handler(callback))
 
