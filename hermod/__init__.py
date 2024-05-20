@@ -4,7 +4,7 @@ import re
 from typing import Callable
 import inspect
 
-_SLEIPNIR_PATH = os.path.join('__sleipnir__', 'sleipnir.so')
+_SLEIPNIR_PATH = '/__sleipnir__/sleipnir.so'
 
 
 def run(handler: Callable[..., dict]):
