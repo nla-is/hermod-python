@@ -2,7 +2,7 @@ import hermod
 import time
 
 
-def handler(input_message):
+def handler() -> dict:
     return {'timestamp': int(time.time() * 1000)}
 
 

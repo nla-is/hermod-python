@@ -1,9 +1,9 @@
 import hermod
 
 
-def handler(input_message):
-    input_message['repeated'] = True
-    return input_message
+def handler(**kwargs) -> dict:
+    kwargs['repeated'] = True
+    return kwargs
 
 
 if __name__ == '__main__':
