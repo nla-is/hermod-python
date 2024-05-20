@@ -1,9 +1,7 @@
 import json
 import os.path
 import re
-from ctypes import *
 from typing import Callable
-import cbor2
 import inspect
 
 
@@ -11,13 +9,17 @@ _SLEIPNIR_PATH = os.path.join('__sleipnir__', 'sleipnir.so')
 
 
 def run(handler: Callable[..., dict]):
+    hr = HandlerRunner(handler)
     if os.path.exists(_SLEIPNIR_PATH):
-        _run_production(handler)
+        _run_production(hr)
     else:
-        _run_testing(handler)
+        _run_testing(hr)
 
 
-def _run_production(handler: Callable[..., dict]):
+def _run_production(hr: 'HandlerRunner'):
+    from ctypes import cdll, c_void_p, c_char_p, c_int32, CFUNCTYPE, string_at
+    import cbor2
+
     sleipnir = cdll.LoadLibrary("sleipnir.so")
     sleipnir.HermodV1ResultSetError.argtypes = [c_void_p, c_char_p]
     sleipnir.HermodV1ResultSetOutput.argtypes = [c_void_p, c_void_p, c_int32]
@@ -25,9 +27,10 @@ def _run_production(handler: Callable[..., dict]):
     hermod_v1_handler = CFUNCTYPE(c_void_p, c_void_p, c_void_p, c_int32)
 
     def callback(result, payload, payload_size):
-        msg = cbor2.loads(bytearray(string_at(payload, payload_size)))
         try:
-            data = cbor2.dumps(handler(msg))
+            params = cbor2.loads(bytearray(string_at(payload, payload_size)))
+            result = hr.call_handler(params)
+            data = cbor2.dumps(result)
             sleipnir.HermodV1ResultSetOutput(result, data, len(data))
         except Exception as e:
             sleipnir.HermodV1ResultSetError(result, bytes(f"exception {e}", encoding='ascii'))
@@ -35,9 +38,7 @@ def _run_production(handler: Callable[..., dict]):
     sleipnir.HermodV1Run(hermod_v1_handler(callback))
 
 
-def _run_testing(handler: Callable[..., dict]):
-    hr = HandlerRunner(handler)
-
+def _run_testing(hr: 'HandlerRunner'):
     import socket
     import multipart
     from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
