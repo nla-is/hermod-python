@@ -99,7 +99,8 @@ def _run_testing(hr: 'HandlerRunner'):
             if self._address.startswith('/'):
                 self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
                 self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                os.unlink(self._address)
+                if os.path.exists(self._address):
+                    os.unlink(self._address)
                 self.socket.bind(self._address)
                 self.pretty_address = f"UNIX socket {self._address}"
             else:
