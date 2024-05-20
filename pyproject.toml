@@ -1,6 +1,19 @@
+[project]
+name = "hermod-python"
+version = "0.1.0-alpha"
+description = "Hermod SDK for Python"
+
+requires-python = ">= 3.8"
+
+dependencies = [
+    "cbor2>=5.5.0",
+    "multipart>=0.2.4"
+]
+
 [build-system]
 requires = [
     "setuptools>=42",
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
