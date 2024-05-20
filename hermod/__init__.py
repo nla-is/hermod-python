@@ -1,5 +1,6 @@
+import json
 import os.path
-import sys
+import re
 from ctypes import *
 from typing import Callable
 import cbor2
@@ -36,9 +37,85 @@ def _run_production(handler: Callable[..., dict]):
 
 def _run_testing(handler: Callable[..., dict]):
     hr = HandlerRunner(handler)
-    while True:
-        print(hr.call_handler({'x': 23, 't': 12, 'xx': 101}))
-        sys.exit(-1)
+
+    import socket
+    import multipart
+    from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
+
+    def app(environ, start_response):
+        content_type = environ.get('CONTENT_TYPE')
+        if not content_type.startswith('multipart/form-data'):
+            start_response('400 Bad Request', [])
+            return ["expected multipart/form-data".encode("utf-8")]
+        forms, files = multipart.parse_form_data(environ)
+        params = {}
+        if 'input.json' in forms:
+            try:
+                params = json.loads(forms['input.json'])
+            except json.JSONDecodeError as e:
+                start_response('400 Bad Request', [])
+                return [f"invalid input {e}".encode("utf-8")]
+        for file in files:
+            params[file] = files[file].raw
+
+        try:
+            response = hr.call_handler(params)
+        except Exception as e:
+            start_response('400 Bad Request', [])
+            return [f"exception {e}".encode("utf-8")]
+
+        try:
+            response = json.dumps(response)
+        except Exception as e:
+            start_response('500 Internal Server Error', [])
+            return [f"exception {e}".encode("utf-8")]
+
+        status = '200 OK'
+        headers = [('Content-type', 'application/json; charset=utf-8')]
+
+        start_response(status, headers)
+
+        return [response.encode("utf-8")]
+
+    class Handler(WSGIRequestHandler):
+        def __init__(self, x, y, z):
+            super().__init__(x, y, z)
+
+        def address_string(self):
+            if self.client_address is None or self.client_address == '':
+                self.client_address = ('127.0.0.1', 0)
+            return self.client_address[0]
+
+    class Server(WSGIServer):
+        def __init__(self, address, h=WSGIRequestHandler):
+            self._address = address
+            super().__init__(None, Handler)
+            self.set_app(app)
+
+        def server_bind(self):
+            self.server_name = 'hermod'
+            self.server_port = 666
+            if self._address.startswith('/'):
+                self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                os.unlink(self._address)
+                self.socket.bind(self._address)
+                self.pretty_address = f"UNIX socket {self._address}"
+            else:
+                host, port = self._address.split(':')
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                self.socket.bind((host, int(port)))
+                self.pretty_address = f"http://{host}:{port}"
+            self.socket.listen(5)
+            self.setup_environ()
+
+
+    server_address = os.getenv('HERMOD_TESTING_SERVER_ADDRESS', '127.0.0.1:6660')
+    server_address = re.sub('^http://', '', server_address)
+    server = Server(server_address)
+    print(f"Hermod - Starting testing server on {server.pretty_address} ...")
+    server.serve_forever()
 
 
 class HandlerRunner:
