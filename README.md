@@ -11,8 +11,7 @@ pip install git+https://github.com/nla-is/hermod-python.git
 ```python
 import hermod
 
-def handler(input_parameters):
-    return input_parameters
+def handler() -> str:
+    return hermod.invoke_sync("generate-random-sentence")
 
-hermod.run(handler)
 ```

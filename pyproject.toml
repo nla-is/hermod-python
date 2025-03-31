@@ -6,8 +6,10 @@ description = "Hermod SDK for Python"
 requires-python = ">= 3.8"
 
 dependencies = [
-    "cbor2>=5.5.0",
-    "multipart>=0.2.4"
+    "multipart>=0.2.4",
+    "requests>=2.32.3",
+    "pydantic>=2.10.5",
+    "cbor2>=5.6.5"
 ]
 
 [build-system]
